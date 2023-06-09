@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react";
+
 const GlobalContext = React.createContext({
   monthIndex: 0,
   setMonthIndex: (index) => {},
@@ -18,4 +19,4 @@ const GlobalContext = React.createContext({
   filteredEvents: [],
 });
 
-export default GlobalContext
+export default GlobalContext;

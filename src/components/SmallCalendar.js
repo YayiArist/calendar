@@ -1,34 +1,34 @@
-import React, { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { getMonth } from "../util";
-import PrevOrNextButtons from "./PrevOrNextButtons";
+import React, { useContext, useEffect, useState } from "react";
 import GlobalContext from "../context/GlobalContext";
+import { getMonth } from "../util";
 
 export default function SmallCalendar() {
-  //tiene un estado local porque no quiero qeu afecte el caledario grande, quiero que sea
-  //independiente
-  const [currentMonthIdx, setCurrentMonthIdx] = useState(dayjs().month());
+  const [currentMonthIdx, setCurrentMonthIdx] = useState(
+    dayjs().month()
+  );
   const [currentMonth, setCurrentMonth] = useState(getMonth());
-
-  //traigo el contexto global porque el calendario chico de mueve solo pero el grande mueve los dos
+  useEffect(() => {
+    setCurrentMonth(getMonth(currentMonthIdx));
+  }, [currentMonthIdx]);
 
   const {
     monthIndex,
     setSmallCalendarMonth,
-    setMonthIndex,
     setDaySelected,
     daySelected,
   } = useContext(GlobalContext);
-  //cuando se monta setea current como dependencia tiene el contexto, cuando resetea vuelve e renderizar
-  useEffect(() => {
-    setCurrentMonth(getMonth(currentMonthIdx));
-    console.log("setea el chiquito");
-  }, [currentMonthIdx]);
 
   useEffect(() => {
     setCurrentMonthIdx(monthIndex);
   }, [monthIndex]);
 
+  function handlePrevMonth() {
+    setCurrentMonthIdx(currentMonthIdx - 1);
+  }
+  function handleNextMonth() {
+    setCurrentMonthIdx(currentMonthIdx + 1);
+  }
   function getDayClass(day) {
     const format = "DD-MM-YY";
     const nowDay = dayjs().format(format);
@@ -42,18 +42,25 @@ export default function SmallCalendar() {
       return "";
     }
   }
-
   return (
     <div className="mt-9">
       <header className="flex justify-between">
         <p className="text-gray-500 font-bold">
-          {dayjs(new Date(dayjs().year(), currentMonthIdx)).format("MMMM YYYY")}
+          {dayjs(new Date(dayjs().year(), currentMonthIdx)).format(
+            "MMMM YYYY"
+          )}
         </p>
         <div>
-          <PrevOrNextButtons
-            monthIndex={currentMonthIdx}
-            setMonthIndex={setCurrentMonthIdx}
-          />
+          <button onClick={handlePrevMonth}>
+            <span className="material-icons-outlined cursor-pointer text-gray-600 mx-2">
+              chevron_left
+            </span>
+          </button>
+          <button onClick={handleNextMonth}>
+            <span className="material-icons-outlined cursor-pointer text-gray-600 mx-2">
+              chevron_right
+            </span>
+          </button>
         </div>
       </header>
       <div className="grid grid-cols-7 grid-rows-6">

@@ -113,4 +113,3 @@ export default function ContextWrapper(props) {
     </GlobalContext.Provider>
   );
 }
-
